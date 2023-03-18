@@ -10,15 +10,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// ---------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------
-
-const (
-	HOST   = "localhost"
-	PORT   = 10000
-	DBNAME = "articles.db"
-)
+var DBNAME string
 
 // ---------------------------------------------------------------------
 // Functions
@@ -38,7 +30,11 @@ func Connect() (*sql.DB, error) {
 }
 
 // HandleRequests registers all the routers and starts the server.
-func HandleRequests() {
+func HandleRequests(config Configuration) {
+	
+	DBNAME = config.DBNAME
+	hostAndPort := fmt.Sprintf("%s:%d", config.HOST, config.PORT)
+
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", HomePage)
 	myRouter.HandleFunc("/articles", GetAll)
@@ -47,7 +43,6 @@ func HandleRequests() {
 	myRouter.HandleFunc("/article/{id}", Update).Methods("PUT")
 	myRouter.HandleFunc("/article/{id}", Get)
 
-	log.Printf("Starting server on port %d\n", PORT)
-	hostAndPort := fmt.Sprintf("%s:%d", HOST, PORT)
+	log.Printf("Starting server on port %d\n", config.PORT)
 	log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
 }
