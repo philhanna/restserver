@@ -13,20 +13,11 @@ import (
 // Type definitions
 // ---------------------------------------------------------------------
 
-type Article struct {
-    Title string `json:"Title"`
-    Desc string `json:"desc"`
-    Content string `json:"content"`
-}
-
 // ---------------------------------------------------------------------
 // Variables
 // ---------------------------------------------------------------------
 
-// let's declare a global Articles array
-// that we can then populate in our main function
-// to simulate a database
-var Articles []Article
+
 
 // ---------------------------------------------------------------------
 // Functions
@@ -42,6 +33,11 @@ func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Articles)
 }
 
+func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
+	log.Println("Endpoint Hit: returnSingleArticle")
+	json.NewEncoder(w).Encode(Articles)
+}
+
 func handleRequests() {
 	const HOST = "localhost"
 	const PORT = 10000
@@ -50,6 +46,7 @@ func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
     myRouter.HandleFunc("/", homePage)
     myRouter.HandleFunc("/all", returnAllArticles)
+	myRouter.HandleFunc("/article/{id}", returnSingleArticle)
 	
 	log.Printf("Starting server on port %d\n", PORT)
     log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
@@ -57,9 +54,5 @@ func handleRequests() {
 
 func main() {
 	log.Println("Rest API v2.0 - Mux Routers")
-	Articles = []Article{
-        {Title: "Hello", Desc: "Article Description", Content: "Article Content"},
-        {Title: "Hello 2", Desc: "Article Description", Content: "Article Content"},
-    }
     handleRequests()
 }
