@@ -1,3 +1,0 @@
-host: localhost
-port: 10000
-dbname: /tmp/articles.db
