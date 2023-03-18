@@ -22,8 +22,15 @@ func CreateNewArticle(w http.ResponseWriter, r *http.Request) {
 	var article Article
 	json.Unmarshal(reqBody, &article)
 
+	// Connect to the database
+	db, err := Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 	// Append this to our articles database.
-	_, err := db.Exec(`INSERT INTO articles VALUES(?, ?, ?, ?)`,
+	_, err = db.Exec(`INSERT INTO articles VALUES(?, ?, ?, ?)`,
 		article.Id, article.Title, article.Description, article.Content)
 	if err != nil {
 		log.Fatal(err)
@@ -42,10 +49,21 @@ func DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
+	// Connect to the database
+	db, err := Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Delete the article
 	rs, err := db.Query(`DELETE FROM articles WHERE Id=?`, id)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rs.Close()
+
+	// If the article was not found, the result set will be empty.
 	if !rs.Next() {
 		errmsg := fmt.Sprintf("Article %s not found", id)
 		http.Error(w, errmsg, http.StatusNotFound)
@@ -62,12 +80,21 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 func ReturnAllArticles(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering ReturnAllArticles")
 
+	// Connect to the database
+	db, err := Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Select all articles
 	rs, err := db.Query(`SELECT Id, Title, Description, Content FROM articles`)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rs.Close()
 
+	// Load the articles into an array slice
 	articles := make([]Article, 0)
 	for rs.Next() {
 		article := Article{}
@@ -75,6 +102,7 @@ func ReturnAllArticles(w http.ResponseWriter, r *http.Request) {
 		articles = append(articles, article)
 	}
 
+	// Return the array slice
 	json.NewEncoder(w).Encode(articles)
 }
 
@@ -82,9 +110,19 @@ func ReturnAllArticles(w http.ResponseWriter, r *http.Request) {
 // returns the corresponding article in the collection.
 func ReturnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering ReturnSingleArticle")
+	
+	// Get the requested Id
 	vars := mux.Vars(r)
 	key := vars["id"]
 
+	// Connect to the database
+	db, err := Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Select the requested article
 	rs, err := db.Query(`
 		SELECT	Id, Title, Description, Content
 		FROM	articles
@@ -95,11 +133,16 @@ func ReturnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rs.Close()
 
+	// Read the result set into a new Article structure
 	article := Article{}
 	if rs.Next() {
 		rs.Scan(&article.Id, &article.Title, &article.Description, &article.Content)
+
+		// If it is found, return its JSON representation
 		json.NewEncoder(w).Encode(article)
 	} else {
+
+		// Otherwise, return a 404 eror
 		http.Error(w, "Article not found", http.StatusNotFound)
 	}
 }
@@ -120,8 +163,15 @@ func UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	var newData Article
 	json.Unmarshal(reqBody, &newData)
 
+	// Connect to the database
+	db, err := Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 	// Update the database
-	_, err := db.Exec(`
+	_, err = db.Exec(`
 		UPDATE  articles
 		SET		Title = ?,
 				Description = ?,
@@ -132,5 +182,6 @@ func UpdateArticle(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+	// Return the JSON representation of the new article
 	json.NewEncoder(w).Encode(newData)
 }

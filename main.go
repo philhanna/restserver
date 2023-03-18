@@ -15,23 +15,20 @@ const HOST = "localhost"
 const PORT = 10000
 const DBNAME = "articles.db"
 
-var db *sql.DB
+// Connect opens a connection to the database.
+func Connect() (*sql.DB, error) {
+	db, err := sql.Open("sqlite3", DBNAME)
+	if err != nil {
+		return nil, err
+	}
+	err = db.Ping()
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
 
 func handleRequests() {
-
-	// Get a database handle
-    var err error
-    db, err = sql.Open("sqlite3", DBNAME)
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    pingErr := db.Ping()
-    if pingErr != nil {
-        log.Fatal(pingErr)
-    }
-    log.Printf("Connected to %s\n", DBNAME)
-	defer db.Close()
 
 	hostAndPort := fmt.Sprintf("%s:%d", HOST, PORT)
 
