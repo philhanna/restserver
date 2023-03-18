@@ -15,17 +15,17 @@ func handleRequests() {
 	hostAndPort := fmt.Sprintf("%s:%d", HOST, PORT)
 
 	myRouter := mux.NewRouter().StrictSlash(true)
-    myRouter.HandleFunc("/", homePage)
-    myRouter.HandleFunc("/articles", returnAllArticles)
+	myRouter.HandleFunc("/", HomePage)
+	myRouter.HandleFunc("/articles", ReturnAllArticles)
 	// NOTE: post method must come before the rest
-	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
-	myRouter.HandleFunc("/article/{id}", returnSingleArticle)
-	
+	myRouter.HandleFunc("/article", CreateNewArticle).Methods("POST")
+	myRouter.HandleFunc("/article/{id}", ReturnSingleArticle)
+
 	log.Printf("Starting server on port %d\n", PORT)
-    log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
+	log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
 }
 
 func main() {
 	log.Println("Rest API v2.0 - Mux Routers")
-    handleRequests()
+	handleRequests()
 }
