@@ -10,7 +10,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var DBNAME string
+var config *Configuration
 
 // ---------------------------------------------------------------------
 // Functions
@@ -18,7 +18,7 @@ var DBNAME string
 
 // Connect opens a connection to the database.
 func Connect() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", DBNAME)
+	db, err := sql.Open("sqlite3", config.DBNAME)
 	if err != nil {
 		return nil, err
 	}
@@ -30,9 +30,14 @@ func Connect() (*sql.DB, error) {
 }
 
 // HandleRequests registers all the routers and starts the server.
-func HandleRequests(config Configuration) {
+func HandleRequests() {
+
+	var err error
+	config, err = NewConfiguration()
+	if err != nil {
+		log.Fatal(err)
+	}
 	
-	DBNAME = config.DBNAME
 	hostAndPort := fmt.Sprintf("%s:%d", config.HOST, config.PORT)
 
 	myRouter := mux.NewRouter().StrictSlash(true)
