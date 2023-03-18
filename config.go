@@ -1,7 +1,6 @@
 package webserver
 
 import (
-	"log"
 	"os"
 
 	"github.com/ghodss/yaml"
@@ -21,15 +20,17 @@ type Configuration struct {
 // Constructor
 // ---------------------------------------------------------------------
 
-func NewConfiguration(configfile string) Configuration {
+// NewConfiguration creates a configuration structure from the specified
+// YAML file.
+func NewConfiguration(configfile string) (Configuration, error) {
 	yamlBlob, err := os.ReadFile(configfile)
 	if err != nil {
-		log.Fatal(err)
+		return Configuration{}, err
 	}
 	p := new(Configuration)
 	err = yaml.Unmarshal(yamlBlob, p)
 	if err != nil {
-		log.Fatal(err)
+		return *p, err
 	}
-	return *p
+	return *p, nil
 }
