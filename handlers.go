@@ -65,7 +65,7 @@ func DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	
 	DELETE
 	FROM	articles
-	WHERE Id=?
+	WHERE	id=?
 	
 	`, id)
 	if err != nil {
@@ -100,11 +100,12 @@ func ReturnAllArticles(w http.ResponseWriter, r *http.Request) {
 	// Select all articles
 	rs, err := db.Query(`
 
-	SELECT	Id,
-			Title,
-			Description,
-			Content
-	FROM	articles
+	SELECT		id,
+				title,
+				description,
+				content
+	FROM		articles
+	ORDER BY 	1, 2
 
 	`)
 	if err != nil {
@@ -143,10 +144,10 @@ func ReturnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	// Select the requested article
 	rs, err := db.Query(`
 
-		SELECT	Id,
-				Title,
-				Description,
-				Content
+		SELECT	id,
+				title,
+				description,
+				content
 		FROM	articles
 		WHERE	Id=?
 
@@ -197,10 +198,10 @@ func UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec(`
 
 		UPDATE  articles
-		SET		Title = ?,
-				Description = ?,
-				Content = ?
-		WHERE	Id = ?
+		SET		title = ?,
+				description = ?,
+				content = ?
+		WHERE	id = ?
 		
 		`, newData.Title, newData.Description, newData.Content, id)
 	if err != nil {

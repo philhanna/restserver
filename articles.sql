@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS articles;
 CREATE TABLE articles (
-    Id text,
-    Title text,
-    Description text,
-    Content text
+    id text,
+    title text,
+    description text,
+    content text
 );
 BEGIN;
 INSERT INTO articles VALUES("1", "Hello 1", "Article 1 description", "Article 1 content");
