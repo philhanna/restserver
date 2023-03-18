@@ -3,7 +3,7 @@ package main
 
 import (
 	"log"
-	server "github.com/philhanna/webserver"
+	server "github.com/philhanna/restserver"
 )
 
 func main() {

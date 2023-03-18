@@ -1,4 +1,4 @@
-package webserver
+package restserver
 
 import (
 	"database/sql"
@@ -46,7 +46,7 @@ func HandleRequests() {
 	myRouter.HandleFunc("/article/{id}", Delete).Methods("DELETE")
 	myRouter.HandleFunc("/article/{id}", Update).Methods("PUT")
 	myRouter.HandleFunc("/article/{id}", Get)
-	
+
 	log.Printf("Starting server on port %d\n", PORT)
 	hostAndPort := fmt.Sprintf("%s:%d", HOST, PORT)
 	log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
