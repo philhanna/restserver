@@ -12,7 +12,7 @@ import (
 // ---------------------------------------------------------------------
 
 const (
-	PACKAGE_NAME = "restserver"
+	PACKAGE_NAME   = "restserver"
 	YAML_FILE_NAME = "config.yml"
 )
 
@@ -34,7 +34,7 @@ type Configuration struct {
 // NewConfiguration creates a configuration structure from the YAML file
 // in the user configuration directory.
 func NewConfiguration() (*Configuration, error) {
-	
+
 	// Get the configuration file name
 	configfile, err := ConfigurationFile()
 	if err != nil {
@@ -72,6 +72,6 @@ func ConfigurationFile() (string, error) {
 
 	// Add the path to the yaml
 	configfile := filepath.Join(dirname, PACKAGE_NAME, YAML_FILE_NAME)
-	
+
 	return configfile, nil
 }
