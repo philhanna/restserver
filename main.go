@@ -16,7 +16,8 @@ func handleRequests() {
 
 	myRouter := mux.NewRouter().StrictSlash(true)
     myRouter.HandleFunc("/", homePage)
-    myRouter.HandleFunc("/all", returnAllArticles)
+    myRouter.HandleFunc("/articles", returnAllArticles)
+	// NOTE: post method must come before the rest
 	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
 	myRouter.HandleFunc("/article/{id}", returnSingleArticle)
 	
