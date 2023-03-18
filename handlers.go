@@ -30,7 +30,11 @@ func CreateNewArticle(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	// Append this to our articles database.
-	_, err = db.Exec(`INSERT INTO articles VALUES(?, ?, ?, ?)`,
+	_, err = db.Exec(`
+
+	INSERT INTO articles VALUES(?, ?, ?, ?)
+
+	`,
 		article.Id, article.Title, article.Description, article.Content)
 	if err != nil {
 		log.Fatal(err)
@@ -57,7 +61,13 @@ func DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	// Delete the article
-	rs, err := db.Query(`DELETE FROM articles WHERE Id=?`, id)
+	rs, err := db.Query(`
+	
+	DELETE
+	FROM	articles
+	WHERE Id=?
+	
+	`, id)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,7 +98,15 @@ func ReturnAllArticles(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	// Select all articles
-	rs, err := db.Query(`SELECT Id, Title, Description, Content FROM articles`)
+	rs, err := db.Query(`
+
+	SELECT	Id,
+			Title,
+			Description,
+			Content
+	FROM	articles
+
+	`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -110,7 +128,7 @@ func ReturnAllArticles(w http.ResponseWriter, r *http.Request) {
 // returns the corresponding article in the collection.
 func ReturnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering ReturnSingleArticle")
-	
+
 	// Get the requested Id
 	vars := mux.Vars(r)
 	key := vars["id"]
@@ -124,9 +142,14 @@ func ReturnSingleArticle(w http.ResponseWriter, r *http.Request) {
 
 	// Select the requested article
 	rs, err := db.Query(`
-		SELECT	Id, Title, Description, Content
+
+		SELECT	Id,
+				Title,
+				Description,
+				Content
 		FROM	articles
 		WHERE	Id=?
+
 		`, key)
 	if err != nil {
 		log.Fatal(err)
@@ -172,11 +195,13 @@ func UpdateArticle(w http.ResponseWriter, r *http.Request) {
 
 	// Update the database
 	_, err = db.Exec(`
+
 		UPDATE  articles
 		SET		Title = ?,
 				Description = ?,
 				Content = ?
 		WHERE	Id = ?
+		
 		`, newData.Title, newData.Description, newData.Content, id)
 	if err != nil {
 		log.Fatal(err)
