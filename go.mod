@@ -1,4 +1,4 @@
-module webserver
+module github.com/philhanna/webserver
 
 go 1.20
 
