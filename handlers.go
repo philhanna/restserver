@@ -92,9 +92,12 @@ func ReturnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	defer rs.Close()
 
 	article := Article{}
-	rs.Scan(&article.Id, &article.Title, &article.Description, &article.Content)
-
-	json.NewEncoder(w).Encode(article)
+	if rs.Next() {
+		rs.Scan(&article.Id, &article.Title, &article.Description, &article.Content)
+		json.NewEncoder(w).Encode(article)
+	} else {
+		http.Error(w, "Article not found", http.StatusNotFound)
+	}
 }
 
 // UpdateArticle gets an article number from the request and updates the
