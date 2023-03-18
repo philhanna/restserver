@@ -89,6 +89,7 @@ func UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	for index, article := range articles {
 		if article.Id == id {
 			articles[index] = newData
+			json.NewEncoder(w).Encode(newData)
 		}
 	}
 }
