@@ -12,7 +12,7 @@ I have added an SQLite3 database as a backing store.
 ```bash
 git clone git@github.com:philhanna/restserver.git
 ```
-- Create a `config.yml` file in `$HOME/.config/restserver`
+- Create a `config.yml` file in `$HOME/.config/restserver` (on Windows, `%appdata%\restserver`)
 ```yaml
 host: localhost
 port: 10000
