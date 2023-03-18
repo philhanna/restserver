@@ -37,7 +37,7 @@ func HandleRequests() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	hostAndPort := fmt.Sprintf("%s:%d", config.HOST, config.PORT)
 
 	myRouter := mux.NewRouter().StrictSlash(true)

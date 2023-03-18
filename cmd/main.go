@@ -11,7 +11,7 @@ import (
 
 func createDatabaseIfNecessary() {
 
-	checkError := func (err error) {
+	checkError := func(err error) {
 		if err != nil {
 			log.Fatal(err)
 		}
