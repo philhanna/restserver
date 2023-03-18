@@ -22,8 +22,12 @@ func CreateNewArticle(w http.ResponseWriter, r *http.Request) {
 	var article Article
 	json.Unmarshal(reqBody, &article)
 
-	// Append this to our articles array.
-	articles = append(articles, article)
+	// Append this to our articles database.
+	_, err := db.Exec(`INSERT INTO articles VALUES(?, ?, ?, ?)`,
+		article.Id, article.Title, article.Description, article.Content)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Respond with the ToJSON string representation of the new article.
 	json.NewEncoder(w).Encode(article)
@@ -38,10 +42,9 @@ func DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	for index, article := range articles {
-		if article.Id == id {
-			articles = append(articles[:index], articles[index+1:]...)
-		}
+	_, err := db.Exec(`DELETE FROM articles WHERE Id=?`, id)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
@@ -54,6 +57,20 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 // ReturnAllArticles returns the entire articles collection
 func ReturnAllArticles(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering ReturnAllArticles")
+
+	rs, err := db.Query(`SELECT Id, Title, Description, Content FROM articles`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rs.Close()
+
+	articles := make([]Article, 0)
+	for rs.Next() {
+		article := Article{}
+		rs.Scan(&article.Id, &article.Title, &article.Description, &article.Content)
+		articles = append(articles, article)
+	}
+
 	json.NewEncoder(w).Encode(articles)
 }
 
@@ -63,11 +80,21 @@ func ReturnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering ReturnSingleArticle")
 	vars := mux.Vars(r)
 	key := vars["id"]
-	for _, article := range articles {
-		if article.Id == key {
-			json.NewEncoder(w).Encode(article)
-		}
+
+	rs, err := db.Query(`
+		SELECT	Id, Title, Description, Content
+		FROM	articles
+		WHERE	Id=?
+		`, key)
+	if err != nil {
+		log.Fatal(err)
 	}
+	defer rs.Close()
+
+	article := Article{}
+	rs.Scan(&article.Id, &article.Title, &article.Description, &article.Content)
+
+	json.NewEncoder(w).Encode(article)
 }
 
 // UpdateArticle gets an article number from the request and updates the
@@ -86,10 +113,17 @@ func UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	var newData Article
 	json.Unmarshal(reqBody, &newData)
 
-	for index, article := range articles {
-		if article.Id == id {
-			articles[index] = newData
-			json.NewEncoder(w).Encode(newData)
-		}
+	// Update the database
+	_, err := db.Exec(`
+		UPDATE  articles
+		SET		Title = ?,
+				Description = ?,
+				Content = ?
+		WHERE	Id = ?
+		`, newData.Title, newData.Description, newData.Content, id)
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	json.NewEncoder(w).Encode(newData)
 }

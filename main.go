@@ -2,16 +2,37 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	_ "github.com/mattn/go-sqlite3"
 )
 
+const HOST = "localhost"
+const PORT = 10000
+const DBNAME = "articles.db"
+
+var db *sql.DB
+
 func handleRequests() {
-	const HOST = "localhost"
-	const PORT = 10000
+
+	// Get a database handle
+    var err error
+    db, err = sql.Open("sqlite3", DBNAME)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    pingErr := db.Ping()
+    if pingErr != nil {
+        log.Fatal(pingErr)
+    }
+    log.Printf("Connected to %s\n", DBNAME)
+	defer db.Close()
+
 	hostAndPort := fmt.Sprintf("%s:%d", HOST, PORT)
 
 	myRouter := mux.NewRouter().StrictSlash(true)
