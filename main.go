@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"github.com/gorilla/mux"
 )
 
 // ---------------------------------------------------------------------
@@ -44,15 +45,18 @@ func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 func handleRequests() {
 	const HOST = "localhost"
 	const PORT = 10000
-
-    http.HandleFunc("/", homePage)
-	http.HandleFunc("/articles", returnAllArticles)
 	hostAndPort := fmt.Sprintf("%s:%d", HOST, PORT)
+
+	myRouter := mux.NewRouter().StrictSlash(true)
+    myRouter.HandleFunc("/", homePage)
+    myRouter.HandleFunc("/all", returnAllArticles)
+	
 	log.Printf("Starting server on port %d\n", PORT)
-    log.Fatal(http.ListenAndServe(hostAndPort, nil))
+    log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
 }
 
 func main() {
+	log.Println("Rest API v2.0 - Mux Routers")
 	Articles = []Article{
         {Title: "Hello", Desc: "Article Description", Content: "Article Content"},
         {Title: "Hello 2", Desc: "Article Description", Content: "Article Content"},
