@@ -42,9 +42,13 @@ func DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	_, err := db.Exec(`DELETE FROM articles WHERE Id=?`, id)
+	rs, err := db.Query(`DELETE FROM articles WHERE Id=?`, id)
 	if err != nil {
 		log.Fatal(err)
+	}
+	if !rs.Next() {
+		errmsg := fmt.Sprintf("Article %s not found", id)
+		http.Error(w, errmsg, http.StatusNotFound)
 	}
 }
 
