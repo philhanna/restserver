@@ -10,11 +10,12 @@ import (
 // Delete gets an article number from the request and deletes the
 // corresponding article in the collection.
 func Delete(w http.ResponseWriter, r *http.Request) {
-	log.Println("Entering DeleteArticle")
+	log.Println("Entering Delete")
 
 	// Parse the request parameters and identify the requested ID
 	vars := mux.Vars(r)
 	id := vars["id"]
+	log.Printf("Deleting article %q\n", id)
 
 	// Connect to the database
 	db, err := Connect()

@@ -8,7 +8,7 @@ import (
 
 // GetAll returns the entire articles collection
 func GetAll(w http.ResponseWriter, r *http.Request) {
-	log.Println("Entering ReturnAllArticles")
+	log.Println("Entering GetAll")
 
 	// Connect to the database
 	db, err := Connect()

@@ -10,7 +10,7 @@ import (
 // Create adds a new article to the collection, based on JSON
 // data contained in the request.
 func Create(w http.ResponseWriter, r *http.Request) {
-	log.Println("Entering CreateNewArticle")
+	log.Println("Entering Create")
 
 	// Get the body of our POST request
 	reqBody, _ := ioutil.ReadAll(r.Body)

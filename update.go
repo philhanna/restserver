@@ -17,6 +17,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	// Parse the request parameters and identify the requested ID
 	vars := mux.Vars(r)
 	id := vars["id"]
+	log.Printf("Updating article %q\n", id)
 
 	// Get the body of the request (the JSON for the updated article)
 	reqBody, _ := ioutil.ReadAll(r.Body)

@@ -11,11 +11,12 @@ import (
 // Get gets an article number from the request and
 // returns the corresponding article in the collection.
 func Get(w http.ResponseWriter, r *http.Request) {
-	log.Println("Entering ReturnSingleArticle")
+	log.Println("Entering Get")
 
 	// Get the requested Id
 	vars := mux.Vars(r)
 	key := vars["id"]
+	log.Printf("Getting article %q\n", key)
 
 	// Connect to the database
 	db, err := Connect()
