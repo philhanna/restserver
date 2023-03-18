@@ -11,10 +11,10 @@ type Article struct {
 	Content string `json:"content"`
 }
 
-// Declare a global Articles array that we can then populate in our main
+// Declare a global articles array that we can then populate in our main
 // function to simulate a database
 
-var Articles = []Article{
+var articles = []Article{
 	{Id: "1", Title: "Hello", Desc: "Article Description", Content: "Article Content"},
 	{Id: "2", Title: "Hello 2", Desc: "Article Description", Content: "Article Content"},
 }
