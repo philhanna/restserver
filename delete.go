@@ -24,7 +24,7 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	// Delete the article
-	rs, err := db.Query(`
+	_, err = db.Exec(`
 	
 	DELETE
 	FROM	articles
@@ -34,5 +34,4 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer rs.Close()
 }
