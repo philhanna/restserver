@@ -34,11 +34,11 @@ func handleRequests() {
 
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", HomePage)
-	myRouter.HandleFunc("/articles", ReturnAllArticles)
-	myRouter.HandleFunc("/article", CreateNewArticle).Methods("POST")
-	myRouter.HandleFunc("/article/{id}", DeleteArticle).Methods("DELETE")
-	myRouter.HandleFunc("/article/{id}", UpdateArticle).Methods("PUT")
-	myRouter.HandleFunc("/article/{id}", ReturnSingleArticle)
+	myRouter.HandleFunc("/articles", GetAll)
+	myRouter.HandleFunc("/article", Create).Methods("POST")
+	myRouter.HandleFunc("/article/{id}", Delete).Methods("DELETE")
+	myRouter.HandleFunc("/article/{id}", Update).Methods("PUT")
+	myRouter.HandleFunc("/article/{id}", Get)
 
 	log.Printf("Starting server on port %d\n", PORT)
 	log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
