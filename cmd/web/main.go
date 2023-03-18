@@ -10,7 +10,7 @@ import (
 
 func main() {
 	log.Println("Rest API v2.0 - Mux Routers")
-	filename, err := filepath.Abs("cmd/config.yaml")
+	filename, err := filepath.Abs("cmd/web/config.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
