@@ -1,5 +1,4 @@
-// Tutorial source is https://tutorialedge.net/golang/creating-restful-api-with-golang/
-package main
+package webserver
 
 import (
 	"database/sql"
@@ -11,9 +10,19 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const HOST = "localhost"
-const PORT = 10000
-const DBNAME = "articles.db"
+// ---------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------
+
+const (
+	HOST   = "localhost"
+	PORT   = 10000
+	DBNAME = "articles.db"
+)
+
+// ---------------------------------------------------------------------
+// Functions
+// ---------------------------------------------------------------------
 
 // Connect opens a connection to the database.
 func Connect() (*sql.DB, error) {
@@ -28,10 +37,8 @@ func Connect() (*sql.DB, error) {
 	return db, nil
 }
 
-func handleRequests() {
-
-	hostAndPort := fmt.Sprintf("%s:%d", HOST, PORT)
-
+// HandleRequests registers all the routers and starts the server.
+func HandleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", HomePage)
 	myRouter.HandleFunc("/articles", GetAll)
@@ -39,12 +46,8 @@ func handleRequests() {
 	myRouter.HandleFunc("/article/{id}", Delete).Methods("DELETE")
 	myRouter.HandleFunc("/article/{id}", Update).Methods("PUT")
 	myRouter.HandleFunc("/article/{id}", Get)
-
+	
 	log.Printf("Starting server on port %d\n", PORT)
+	hostAndPort := fmt.Sprintf("%s:%d", HOST, PORT)
 	log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
-}
-
-func main() {
-	log.Println("Rest API v2.0 - Mux Routers")
-	handleRequests()
 }
