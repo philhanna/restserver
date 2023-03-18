@@ -32,7 +32,8 @@ func CreateNewArticle(w http.ResponseWriter, r *http.Request) {
 	// Append this to our articles database.
 	_, err = db.Exec(`
 
-	INSERT INTO articles VALUES(?, ?, ?, ?)
+	INSERT
+	INTO	articles VALUES(?, ?, ?, ?)
 
 	`,
 		article.Id, article.Title, article.Description, article.Content)
