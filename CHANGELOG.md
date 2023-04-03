@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog].
 	
 ## [Unreleased]
 
+## [v1.1.0] - 2023-04-03
+Removed third party library (Gorilla Mux). Now using only `net/http`
+from the standard library.
+
 ## [v1.0.0] - 2023-03-18
 First public version
 
@@ -13,6 +17,7 @@ Added database
 
 [Semantic Versioning]: http://semver.org
 [Keep a Changelog]: http://keepachangelog.com
-[Unreleased]: https://github.com/github.com/philhanna/webserver/compare/v1.0.0..HEAD
+[Unreleased]: https://github.com/github.com/philhanna/webserver/compare/v1.1.0..HEAD
+[v1.1.0]: https://github.com/philhanna/webserver/compare/v1.0.0..v1.1.0
 [v1.0.0]: https://github.com/philhanna/webserver/compare/v0.2.0..v1.0.0
 [v0.2.0]: https://github.com/philhanna/webserver/compare/368355c..v0.2.0
