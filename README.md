@@ -18,18 +18,18 @@ host: localhost
 port: 10000
 dbname: /tmp/articles.db
 dbsql: |
+dbsql: |
   DROP TABLE IF EXISTS articles;
   CREATE TABLE articles (
-      id text,
-      title text,
-      description text,
-      content text
+      id          INTEGER PRIMARY KEY,
+      title       TEXT,
+      description TEXT,
+      content     TEXT
   );
   BEGIN;
-  INSERT INTO articles VALUES("1", "Hello 1", "Article 1 description", "Article 1 content");
-  INSERT INTO articles VALUES("2", "Hello 2", "Article 2 description", "Article 2 content");
+  INSERT INTO articles VALUES(null, "Hello 1", "Article 1 description", "Article 1 content");
+  INSERT INTO articles VALUES(null, "Hello 2", "Article 2 description", "Article 2 content");
   COMMIT;
-
 ```
 Adjust the `port` and `dbname` values as needed.
 
