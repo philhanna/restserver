@@ -3,7 +3,6 @@ package restserver
 import (
 	"log"
 	"net/http"
-
 )
 
 // Delete gets an article number from the request and deletes the
