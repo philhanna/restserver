@@ -8,7 +8,7 @@ import (
 )
 
 // Create adds a new article to the collection, based on JSON
-// data contained in the request.
+// data contained in the request.  This is a POST method.
 func Create(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering Create")
 
@@ -27,16 +27,20 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	// Append this to our articles database.
-	_, err = db.Exec(`
-
+	rs, err := db.Query(`
 	INSERT
-	INTO	articles VALUES(?, ?, ?, ?)
-
-	`,
-		article.Id, article.Title, article.Description, article.Content)
+	INTO		articles VALUES(null, ?, ?, ?)
+	RETURNING 	rowid
+	`, article.Title, article.Description, article.Content)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rs.Close()
+
+	rs.Next()
+	var id int
+	rs.Scan(&id)
+	article.Id = id
 
 	// Respond with the ToJSON string representation of the new article.
 	json.NewEncoder(w).Encode(article)

@@ -4,17 +4,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
 )
 
 // Delete gets an article number from the request and deletes the
-// corresponding article in the collection.
+// corresponding article in the collection. This is a DELETE method.
 func Delete(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering Delete")
 
 	// Parse the request parameters and identify the requested ID
-	vars := mux.Vars(r)
-	id := vars["id"]
+	id := r.URL.Query().Get("id")
 	log.Printf("Deleting article %q\n", id)
 
 	// Connect to the database

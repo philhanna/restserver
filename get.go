@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
 // Get gets an article number from the request and
@@ -14,9 +12,8 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering Get")
 
 	// Get the requested Id
-	vars := mux.Vars(r)
-	key := vars["id"]
-	log.Printf("Getting article %q\n", key)
+	id := r.URL.Query().Get("id")
+	log.Printf("Getting article %q\n", id)
 
 	// Connect to the database
 	db, err := Connect()
@@ -27,15 +24,13 @@ func Get(w http.ResponseWriter, r *http.Request) {
 
 	// Select the requested article
 	rs, err := db.Query(`
-
 		SELECT	id,
 				title,
 				description,
 				content
 		FROM	articles
 		WHERE	Id=?
-
-		`, key)
+		`, id)
 	if err != nil {
 		log.Fatal(err)
 	}

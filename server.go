@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -40,14 +39,10 @@ func HandleRequests() {
 
 	hostAndPort := fmt.Sprintf("%s:%d", config.HOST, config.PORT)
 
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/", HomePage)
-	myRouter.HandleFunc("/articles", GetAll)
-	myRouter.HandleFunc("/article", Create).Methods("POST")
-	myRouter.HandleFunc("/article/{id}", Delete).Methods("DELETE")
-	myRouter.HandleFunc("/article/{id}", Update).Methods("PUT")
-	myRouter.HandleFunc("/article/{id}", Get)
+	http.HandleFunc("/", HomePage)
+	http.HandleFunc("/articles", GetAll)
+	http.HandleFunc("/article", HandleArticle)
 
 	log.Printf("Starting server on port %d\n", config.PORT)
-	log.Fatal(http.ListenAndServe(hostAndPort, myRouter))
+	log.Fatal(http.ListenAndServe(hostAndPort, nil))
 }
